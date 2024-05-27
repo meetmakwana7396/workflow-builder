@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import BuilderMain from "../components/builder/builder-main";
+import Sidebar from "../components/sidebar";
 
 export const metadata: Metadata = {
   title: "Workflow Builder - by Meet Makwana",
@@ -6,8 +8,9 @@ export const metadata: Metadata = {
 
 export default function IndexPage() {
   return (
-    <div className="">
-      Whereas disregard and contempt for human rights have resulted
+    <div className="h-full flex">
+      <Sidebar />
+      <BuilderMain />
     </div>
   );
 }

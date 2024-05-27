@@ -18,7 +18,7 @@ export default function RootLayout({ children }: Props) {
     <StoreProvider>
       <html lang="en" className={ibmMono.className}>
         <body>
-          <main className="bg-black min-h-screen">{children}</main>
+          <main className="bg-black min-h-screen block">{children}</main>
         </body>
       </html>
     </StoreProvider>

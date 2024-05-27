@@ -1,7 +1,4 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-* {
-  @apply text-white;
-}
+  @tailwind components;
+  @tailwind utilities;
+  
