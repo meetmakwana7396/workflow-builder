@@ -1,5 +1,5 @@
 "use client";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import ReactFlow, {
   addEdge,
   Background,
@@ -13,6 +13,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import FileNode from "./nodes/file-node/file-node";
 
 const initialNodes: Node[] = [
   {
@@ -22,11 +23,19 @@ const initialNodes: Node[] = [
     style: { backgroundColor: "red" },
   },
   { id: "2", position: { x: 100, y: 200 }, data: { label: "2" } },
+  {
+    id: "node-1",
+    type: "fileNode",
+    position: { x: 0, y: 0 },
+    data: { value: 123, color:'#fff' },
+  },
 ];
 
 const initialEdges: Edge[] = [];
 
 const BuilderMain = () => {
+  const nodeTypes = useMemo(() => ({ fileNode: FileNode }), []);
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -47,6 +56,7 @@ const BuilderMain = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          nodeTypes={nodeTypes}
         >
           <Controls />
           <MiniMap
