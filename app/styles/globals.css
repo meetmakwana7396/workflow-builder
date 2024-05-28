@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.add-block-nav-item {
+  @apply flex items-center gap-2 px-2 py-2 hover:bg-white/10 hover:text-neutral-300;
+}

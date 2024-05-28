@@ -14,23 +14,22 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import FileNode from "./nodes/file-node/file-node";
+import AddBlockButton from "./blocks/add-block-button";
 
 const initialNodes: Node[] = [
   {
-    id: "1",
-    position: { x: 100, y: 100 },
-    data: { label: "1" },
-    style: { backgroundColor: "red" },
-  },
-  { id: "2", position: { x: 100, y: 200 }, data: { label: "2" } },
-  {
-    id: "node-1",
+    id: "input-node",
     type: "fileNode",
-    position: { x: 0, y: 0 },
-    data: { value: 123, color:'#fff' },
+    position: { x: 200, y: 100 },
+    data: { value: 123, color: "#fff" },
   },
+  {
+    id: "1",
+    position: { x: 600, y: 50 },
+    data: { label: "1" },
+  },
+  { id: "2", position: { x: 600, y: 200 }, data: { label: "2" } },
 ];
-
 const initialEdges: Edge[] = [];
 
 const BuilderMain = () => {
@@ -41,14 +40,12 @@ const BuilderMain = () => {
 
   const onConnect = useCallback(
     (params: any) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    [setEdges],
   );
 
   return (
-    <div
-      style={{ width: "calc(100vw - 112px)", height: "100vh" }}
-      className="ml-auto"
-    >
+    <div style={{ width: "100vw", height: "100vh" }}>
+      <AddBlockButton />
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}

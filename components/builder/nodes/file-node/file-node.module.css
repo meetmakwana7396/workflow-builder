@@ -1,3 +1,7 @@
 .filenode {
-  @apply bg-slate-300 rounded-lg p-2 rounded-r-none;
+  @apply bg-neutral-800 rounded-lg rounded-r-none border-neutral-600 text-white border flex-col justify-center items-center gap-2;
+}
+
+.filenodeHandle {
+  @apply bg-neutral-600 h-full rounded-none border-none w-3 -right-[10px] rounded-r-lg;
 }

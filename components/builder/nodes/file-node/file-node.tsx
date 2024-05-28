@@ -2,6 +2,7 @@
 import React from "react";
 import styles from "./file-node.module.css";
 import { Handle, Position } from "reactflow";
+import { Cross, X } from "@phosphor-icons/react";
 
 const FileNode = ({
   data,
@@ -12,21 +13,32 @@ const FileNode = ({
 }) => {
   return (
     <div className={styles.filenode}>
-      <div>
-        Custom Color Picker Node: <strong>{data.color}</strong>
+      <div className="flex items-center justify-between border-b border-neutral-600 p-1 px-2 text-xs font-bold text-yellow-500">
+        File
+        <X className="" />
       </div>
-      <input
-        className="nodrag"
-        type="color"
-        onChange={data.onChange}
-        defaultValue={data.color}
-      />
+      <div className="flex items-center justify-center gap-2 p-4">
+        <div className="text-xs">Drop file here or:</div>
+        <label
+          className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
+          role="button"
+        >
+          Open file dialog
+          <input
+            className="nodrag"
+            type="file"
+            onChange={data.onChange}
+            defaultValue={""}
+            hidden
+          />
+        </label>
+      </div>
 
       <Handle
         type="source"
         position={Position.Right}
         id="a"
-        style={{ background: "#555" }}
+        className={styles.filenodeHandle}
         isConnectable={isConnectable}
       />
     </div>
