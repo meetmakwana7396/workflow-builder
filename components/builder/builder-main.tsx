@@ -1,47 +1,40 @@
 "use client";
-import { useCallback, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import ReactFlow, {
-  addEdge,
   Background,
   BackgroundVariant,
   Controls,
-  Edge,
   MiniMap,
-  Node,
   ReactFlowProvider,
-  useEdgesState,
-  useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import FileNode from "./nodes/file-node/file-node";
 import AddBlockButton from "./blocks/add-block-button";
-
-const initialNodes: Node[] = [
-  {
-    id: "input-node",
-    type: "fileNode",
-    position: { x: 200, y: 100 },
-    data: { value: 123, color: "#fff" },
-  },
-  {
-    id: "1",
-    position: { x: 600, y: 50 },
-    data: { label: "1" },
-  },
-  { id: "2", position: { x: 600, y: 200 }, data: { label: "2" } },
-];
-const initialEdges: Edge[] = [];
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  onConnect,
+  onEdgesChange,
+  onNodesChange,
+} from "@/lib/features/workflows/workflowSlice";
+import { useRouter } from "next/navigation";
 
 const BuilderMain = () => {
   const nodeTypes = useMemo(() => ({ fileNode: FileNode }), []);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+  const { workflows, currentWorkflowIndex, currentWorkflowId } = useAppSelector(
+    (state) => state.workflows,
   );
+
+  const nodes = workflows[currentWorkflowIndex]?.nodes;
+  const edges = workflows[currentWorkflowIndex]?.edges;
+
+  useEffect(() => {
+    if (currentWorkflowIndex === -1) {
+      alert("Current workflow id lost, Going back to dashboard!")
+      router.push("/")};
+  }, [currentWorkflowIndex, router]);
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
@@ -50,9 +43,9 @@ const BuilderMain = () => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
+          onNodesChange={(e) => dispatch(onNodesChange(e))}
+          onEdgesChange={(e) => dispatch(onEdgesChange(e))}
+          onConnect={(e) => dispatch(onConnect(e))}
           nodeTypes={nodeTypes}
         >
           <Controls />

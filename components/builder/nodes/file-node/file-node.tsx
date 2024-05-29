@@ -1,13 +1,16 @@
 "use client";
 import React from "react";
 import styles from "./file-node.module.css";
-import { Handle, Position } from "reactflow";
+import { Handle, Position, useNodes } from "reactflow";
 import { Cross, X } from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
 
 const FileNode = ({
+  id,
   data,
   isConnectable,
 }: {
+  id: string;
   data: any;
   isConnectable: any;
 }) => {
@@ -15,7 +18,9 @@ const FileNode = ({
     <div className={styles.filenode}>
       <div className="flex items-center justify-between border-b border-neutral-600 p-1 px-2 text-xs font-bold text-yellow-500">
         File
-        <X className="" />
+        <Button variant="ghost" size="icon">
+          <X className="size-3 shrink-0" />
+        </Button>
       </div>
       <div className="flex items-center justify-center gap-2 p-4">
         <div className="text-xs">Drop file here or:</div>
