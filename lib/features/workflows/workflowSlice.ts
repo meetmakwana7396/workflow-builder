@@ -64,16 +64,16 @@ export const workflowSlice = createSlice({
       const { workflows, currentWorkflowIndex } = state;
       const { nodeId, data } = payload;
       console.log(nodeId, data);
-      state.workflows[currentWorkflowIndex].nodes = workflows[
-        currentWorkflowIndex
-      ].nodes.map((nds) => {
-        if (nds.id === nodeId) {
-          return {
-            ...nds,
-            data: data,
-          };
-        }
-      });
+      // state.workflows[currentWorkflowIndex].nodes = workflows[
+      //   currentWorkflowIndex
+      // ].nodes.map((nds) => {
+      //   if (nds.id === nodeId) {
+      //     return {
+      //       ...nds,
+      //       data: data,
+      //     };
+      //   }
+      // });
     },
 
     deleteNode: ({ workflows, currentWorkflowIndex }, { payload }) => {
