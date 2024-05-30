@@ -9,7 +9,6 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import FileNode from "./nodes/file-node/file-node";
-import AddBlockButton from "./blocks/add-block-button";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   onConnect,
@@ -17,13 +16,15 @@ import {
   onNodesChange,
 } from "@/lib/features/workflows/workflowSlice";
 import { useRouter } from "next/navigation";
+import AddNodeButton from "./nodes/add-node-button";
+import FilterNode from "./nodes/transform-nodes/filter-node";
 
 const BuilderMain = () => {
-  const nodeTypes = useMemo(() => ({ fileNode: FileNode }), []);
+  const nodeTypes = useMemo(() => ({ file: FileNode, filter: FilterNode }), []);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { workflows, currentWorkflowIndex, currentWorkflowId } = useAppSelector(
+  const { workflows, currentWorkflowIndex } = useAppSelector(
     (state) => state.workflows,
   );
 
@@ -32,13 +33,14 @@ const BuilderMain = () => {
 
   useEffect(() => {
     if (currentWorkflowIndex === -1) {
-      alert("Current workflow id lost, Going back to dashboard!")
-      router.push("/")};
+      alert("Current workflow id lost, Going back to dashboard!");
+      router.push("/");
+    }
   }, [currentWorkflowIndex, router]);
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <AddBlockButton />
+      <AddNodeButton />
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}

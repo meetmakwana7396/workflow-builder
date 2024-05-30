@@ -1,24 +1,52 @@
 "use client";
 import React from "react";
-import styles from "./file-node.module.css";
-import { Handle, Position, useNodes } from "reactflow";
-import { Cross, X } from "@phosphor-icons/react";
+import styles from "@/app/styles/node.module.css";
+import { Handle, NodeProps, Position } from "reactflow";
+import { X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/lib/hooks";
+import {
+  deleteNode,
+  updateNodeData,
+} from "@/lib/features/workflows/workflowSlice";
+import { cn } from "@/lib/utils";
+import Papa from "papaparse";
 
-const FileNode = ({
+const FileNode: React.FC<NodeProps> = ({
   id,
   data,
-  isConnectable,
-}: {
-  id: string;
-  data: any;
-  isConnectable: any;
+  isConnectable = true,
+  selected,
 }) => {
+  const dispatch = useAppDispatch();
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files?.[0];
+    if (file) {
+      Papa.parse(file, {
+        dynamicTyping: true,
+        step: function (row) {
+          console.log("Row:", row.data);
+        },
+        complete: function (results) {
+          dispatch(
+            updateNodeData({ nodeId: id, data: { ...data, csvJson: results } }),
+          );
+        },
+      });
+    }
+  };
+
+  console.log(data, "FILE NODE DATA");
+
   return (
-    <div className={styles.filenode}>
-      <div className="flex items-center justify-between border-b border-neutral-600 p-1 px-2 text-xs font-bold text-yellow-500">
+    <div className={cn(styles.customNode, selected && "!border-blue-800")}>
+      <div className="flex items-center justify-between border-b border-neutral-800 p-1 px-2 text-xs font-bold text-yellow-500">
         File
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => dispatch(deleteNode(id))}
+        >
           <X className="size-3 shrink-0" />
         </Button>
       </div>
@@ -32,8 +60,7 @@ const FileNode = ({
           <input
             className="nodrag"
             type="file"
-            onChange={data.onChange}
-            defaultValue={""}
+            onChange={handleFileChange}
             hidden
           />
         </label>
@@ -42,8 +69,8 @@ const FileNode = ({
       <Handle
         type="source"
         position={Position.Right}
-        id="a"
-        className={styles.filenodeHandle}
+        id="fileNodeHandle"
+        className={styles.verticalRightHandle}
         isConnectable={isConnectable}
       />
     </div>

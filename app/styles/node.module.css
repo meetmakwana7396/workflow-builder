@@ -1,0 +1,19 @@
+.customNode {
+  @apply flex-col items-center justify-center gap-2 rounded-lg rounded-r-none border border-neutral-800 bg-neutral-900 text-white;
+}
+
+.verticalRightHandle {
+  @apply -right-[16px] h-full w-4 rounded-none rounded-r-lg border-none bg-neutral-800 hover:bg-neutral-700;
+}
+
+.verticalLeftHandle {
+  @apply -left-[16px] h-full w-4 rounded-none rounded-l-lg border-none bg-neutral-800 hover:bg-neutral-700;
+}
+
+.roundedLeftHandle {
+  @apply -left-[24px] size-6 rounded-none rounded-l-xl border-none bg-neutral-800 hover:bg-neutral-700;
+}
+
+.roundedRightHandle {
+  @apply -right-[24px] size-6 rounded-none rounded-r-xl border-none bg-neutral-800 hover:bg-neutral-700;
+}

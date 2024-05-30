@@ -52,7 +52,7 @@ export default function CreateWorkflowButton() {
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>Create new workflow</Button>
+          <Button className="h-full">Create new workflow</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>Create new workflow</DialogHeader>
@@ -67,7 +67,7 @@ export default function CreateWorkflowButton() {
               {...register("description")}
             />
             <DialogFooter>
-              <Button variant="outline" onClick={() => setOpen(false)}>
+              <Button variant="outline" size="lg" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
               <Button type="submit">Create</Button>

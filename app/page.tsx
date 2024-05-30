@@ -8,12 +8,10 @@ export const metadata: Metadata = {
 export default function IndexPage() {
   return (
     <div className="container">
-      <div className="flex w-full flex-col items-center justify-center space-y-4 py-40">
+      <div className="w-full border-b border-neutral-800 pb-4 pt-10">
         <h1 className="text-6xl font-bold">Dashboard</h1>
       </div>
-      <div className="p-4 py-10">
-        <WorkflowList />
-      </div>
+      <WorkflowList />
     </div>
   );
 }

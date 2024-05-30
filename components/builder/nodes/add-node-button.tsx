@@ -10,12 +10,11 @@ import { addNode } from "@/lib/features/workflows/workflowSlice";
 import { useAppDispatch } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { Atom, GridFour, Plus, PlusCircle } from "@phosphor-icons/react";
-import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
-const inputBlocks = ["File", "Paste", "Http Request", "Sheets", "Example Data"];
-const operationBlocks = [
+const inputNodes = ["File", "Paste", "Http Request", "Sheets", "Example Data"];
+const operationNodes = [
   "Filter",
   "Merge",
   "Sort",
@@ -24,21 +23,17 @@ const operationBlocks = [
   "Rename Columns",
 ];
 
-const AddBlockButton = ({
-  onSelect,
-}: {
-  onSelect?: (blockName: string) => void;
-}) => {
+const AddNodeButton = () => {
   const dispatch = useAppDispatch();
   const [tab, setTab] = useState("all");
   const [open, setOpen] = useState<boolean>();
 
-  const handleOnSelect = (blockName: string) => {
-    blockName = blockName.toLowerCase().replaceAll(" ", "_");
+  const handleAddNode = (nodeType: string) => {
+    nodeType = nodeType.toLowerCase().replaceAll(" ", "_");
     dispatch(
       addNode({
         id: uuid(),
-        type: "fileNode",
+        type: nodeType,
         position: { x: 200, y: 100 },
         data: { value: 123, color: "#fff" },
       }),
@@ -59,16 +54,13 @@ const AddBlockButton = ({
           </Button>
         </DialogTrigger>
         <DialogContent maxWidth="1024px">
-          <DialogHeader>Block library</DialogHeader>
+          <DialogHeader>Node library</DialogHeader>
           <div className="flex">
             <div className="w-full max-w-[20%] pe-4">
               <ul className="text-neutral-500">
                 <li
                   role="button"
-                  className={cn(
-                    "add-block-nav-item",
-                    tab === "all" && "active",
-                  )}
+                  className={cn("add-node-nav-item", tab === "all" && "active")}
                   onClick={() => setTab("all")}
                 >
                   <GridFour className="size-5" />
@@ -77,7 +69,7 @@ const AddBlockButton = ({
                 <li
                   role="button"
                   className={cn(
-                    "add-block-nav-item",
+                    "add-node-nav-item",
                     tab === "input" && "active",
                   )}
                   onClick={() => setTab("input")}
@@ -88,7 +80,7 @@ const AddBlockButton = ({
                 <li
                   role="button"
                   className={cn(
-                    "add-block-nav-item",
+                    "add-node-nav-item",
                     tab === "transform" && "active",
                   )}
                   onClick={() => setTab("transform")}
@@ -105,14 +97,14 @@ const AddBlockButton = ({
                     INPUT
                   </h4>
                   <div className="grid grid-cols-3 gap-4">
-                    {inputBlocks.map((inputBlock) => (
+                    {inputNodes.map((inputNode) => (
                       <div
-                        key={inputBlock}
-                        className="add-block-card"
+                        key={inputNode}
+                        className="add-node-card"
                         role="button"
-                        onClick={() => handleOnSelect(inputBlock)}
+                        onClick={() => handleAddNode(inputNode)}
                       >
-                        {inputBlock}
+                        {inputNode}
                       </div>
                     ))}
                   </div>
@@ -124,14 +116,14 @@ const AddBlockButton = ({
                     TRANSFORM
                   </h4>
                   <div className="grid grid-cols-3 gap-4">
-                    {operationBlocks.map((inputBlock) => (
+                    {operationNodes.map((inputNode) => (
                       <div
-                        key={inputBlock}
-                        className="add-block-card"
+                        key={inputNode}
+                        className="add-node-card"
                         role="button"
-                        onClick={() => handleOnSelect(inputBlock)}
+                        onClick={() => handleAddNode(inputNode)}
                       >
-                        {inputBlock}
+                        {inputNode}
                       </div>
                     ))}
                   </div>
@@ -145,4 +137,4 @@ const AddBlockButton = ({
   );
 };
 
-export default AddBlockButton;
+export default AddNodeButton;
