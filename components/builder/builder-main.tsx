@@ -18,6 +18,7 @@ import {
 import { useRouter } from "next/navigation";
 import AddNodeButton from "./nodes/add-node-button";
 import FilterNode from "./nodes/transform-nodes/filter-node";
+import CollapsibleDataSection from "./collapsible-data-section";
 
 const BuilderMain = () => {
   const nodeTypes = useMemo(() => ({ file: FileNode, filter: FilterNode }), []);
@@ -66,6 +67,7 @@ const BuilderMain = () => {
           />
         </ReactFlow>
       </ReactFlowProvider>
+      <CollapsibleDataSection />
     </div>
   );
 };

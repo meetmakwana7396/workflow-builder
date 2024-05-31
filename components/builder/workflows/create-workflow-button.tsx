@@ -43,9 +43,7 @@ export default function CreateWorkflowButton() {
       dispatch(addWorkflow(formData));
       reset();
       setOpen(false);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -67,7 +65,11 @@ export default function CreateWorkflowButton() {
               {...register("description")}
             />
             <DialogFooter>
-              <Button variant="outline" size="lg" onClick={() => setOpen(false)}>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
               <Button type="submit">Create</Button>

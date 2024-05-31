@@ -28,12 +28,16 @@ export interface WorkflowSliceState {
   workflows: Workflow[];
   currentWorkflowId: string;
   currentWorkflowIndex: number;
+  open: boolean;
+  runningWorkflow: any;
 }
 
 const initialState: WorkflowSliceState = {
   workflows: [],
   currentWorkflowId: "",
   currentWorkflowIndex: -1,
+  open: false,
+  runningWorkflow: null,
 };
 
 export const workflowSlice = createSlice({
@@ -63,17 +67,18 @@ export const workflowSlice = createSlice({
     updateNodeData: (state, { payload }) => {
       const { workflows, currentWorkflowIndex } = state;
       const { nodeId, data } = payload;
-      console.log(nodeId, data);
-      // state.workflows[currentWorkflowIndex].nodes = workflows[
-      //   currentWorkflowIndex
-      // ].nodes.map((nds) => {
-      //   if (nds.id === nodeId) {
-      //     return {
-      //       ...nds,
-      //       data: data,
-      //     };
-      //   }
-      // });
+
+      const updatedNodes = workflows[currentWorkflowIndex].nodes.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: data,
+          };
+        }
+        return node;
+      });
+
+      state.workflows[currentWorkflowIndex].nodes = updatedNodes;
     },
 
     deleteNode: ({ workflows, currentWorkflowIndex }, { payload }) => {
@@ -98,9 +103,20 @@ export const workflowSlice = createSlice({
 
     onConnect: ({ workflows, currentWorkflowIndex }, { payload }) => {
       workflows[currentWorkflowIndex].edges = addEdge(
-        { ...payload, type: "buttonedge" },
+        payload,
         workflows[currentWorkflowIndex].edges,
       );
+    },
+
+    setRunningWorkflow: (
+      { workflows, currentWorkflowIndex },
+      { payload },
+    ) => {
+      
+    },
+
+    toggleOpen: (state) => {
+      state.open = !state.open;
     },
   },
   selectors: {
@@ -117,5 +133,6 @@ export const {
   onEdgesChange,
   onConnect,
   deleteNode,
+  toggleOpen,
 } = workflowSlice.actions;
 export const { selectWorkflow } = workflowSlice.selectors;

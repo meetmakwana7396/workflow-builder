@@ -7,7 +7,7 @@
 }
 
 .form-select {
-  @apply flex appearance-none w-full min-w-20 rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-xs ring-offset-blue-900 file:border-0 file:bg-transparent placeholder:text-slate-500 autofill:!bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex w-full min-w-20 appearance-none rounded-md border border-neutral-800 bg-neutral-950 px-3 py-2 text-xs ring-offset-blue-900 file:border-0 file:bg-transparent placeholder:text-slate-500 autofill:!bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
 .add-node-nav-item {
   @apply flex items-center gap-2 px-2 py-2 hover:bg-white/10 hover:text-neutral-300;
@@ -19,4 +19,8 @@
 
 .add-node-card {
   @apply h-40 w-full rounded bg-neutral-900 p-4 text-neutral-300 shadow-lg transition hover:scale-105 hover:ring-2;
+}
+
+.react-flow__controls-button {
+  @apply !border-neutral-700 !bg-neutral-900 fill-slate-500 !stroke-neutral-300 hover:!bg-neutral-800;
 }

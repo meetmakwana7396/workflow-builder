@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import styles from "@/app/styles/node.module.css";
 import { Handle, NodeProps, Position } from "reactflow";
 import { X } from "@phosphor-icons/react";
@@ -19,14 +19,15 @@ const FileNode: React.FC<NodeProps> = ({
   selected,
 }) => {
   const dispatch = useAppDispatch();
+  const [file, setFile] = useState<any>(null);
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
     if (file) {
+      console.log(file, "file");
+
+      setFile(file);
       Papa.parse(file, {
         dynamicTyping: true,
-        step: function (row) {
-          console.log("Row:", row.data);
-        },
         complete: function (results) {
           dispatch(
             updateNodeData({ nodeId: id, data: { ...data, csvJson: results } }),
@@ -35,8 +36,6 @@ const FileNode: React.FC<NodeProps> = ({
       });
     }
   };
-
-  console.log(data, "FILE NODE DATA");
 
   return (
     <div className={cn(styles.customNode, selected && "!border-blue-800")}>
@@ -51,19 +50,25 @@ const FileNode: React.FC<NodeProps> = ({
         </Button>
       </div>
       <div className="flex items-center justify-center gap-2 p-4">
-        <div className="text-xs">Drop file here or:</div>
-        <label
-          className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
-          role="button"
-        >
-          Open file dialog
-          <input
-            className="nodrag"
-            type="file"
-            onChange={handleFileChange}
-            hidden
-          />
-        </label>
+        {file ? (
+          <div className="text-xs">File name: &quot;{file?.name}&quot;</div>
+        ) : (
+          <>
+            <div className="text-xs">Drop file here or:</div>
+            <label
+              className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
+              role="button"
+            >
+              Open file dialog
+              <input
+                className="nodrag"
+                type="file"
+                onChange={handleFileChange}
+                hidden
+              />
+            </label>
+          </>
+        )}
       </div>
 
       <Handle

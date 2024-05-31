@@ -1,5 +1,5 @@
 .customNode {
-  @apply flex-col items-center justify-center gap-2 rounded-lg rounded-r-none border border-neutral-800 bg-neutral-900 text-white;
+  @apply flex-col items-center justify-center gap-2 rounded-lg rounded-r-none border border-neutral-800 bg-neutral-900 text-white overflow-hidden;
 }
 
 .verticalRightHandle {
