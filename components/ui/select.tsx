@@ -9,7 +9,7 @@ interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
 const Select: React.FC<SelectProps> = ({ children, ...props }) => {
   return (
     <div className="relative">
-      <select className="form-select" {...props}>
+      <select className="form-select truncate !pr-10" {...props}>
         {children}
       </select>
       <ChevronDown className="absolute right-3 top-1/2 cursor-default pointer-events-none size-4 shrink-0 -translate-y-1/2 text-white" />

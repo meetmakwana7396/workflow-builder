@@ -29,7 +29,9 @@ export interface WorkflowSliceState {
   currentWorkflowId: string;
   currentWorkflowIndex: number;
   open: boolean;
-  runningWorkflow: any;
+  nodeData: any;
+  resultColumns?: string[];
+  resultData: any;
 }
 
 const initialState: WorkflowSliceState = {
@@ -37,7 +39,9 @@ const initialState: WorkflowSliceState = {
   currentWorkflowId: "",
   currentWorkflowIndex: -1,
   open: false,
-  runningWorkflow: null,
+  nodeData: [],
+  resultColumns: [],
+  resultData: null,
 };
 
 export const workflowSlice = createSlice({
@@ -51,6 +55,13 @@ export const workflowSlice = createSlice({
         name: payload.name,
         description: payload.description,
       });
+    },
+
+    deleteWorkflow: (state, { payload }) => {
+      state.workflows = state.workflows.filter(
+        (workflow) => workflow.id !== payload,
+      );
+      console.log(state.workflows, "yo");
     },
 
     setCurrentWorkflowId: (state, { payload }) => {
@@ -106,17 +117,39 @@ export const workflowSlice = createSlice({
         payload,
         workflows[currentWorkflowIndex].edges,
       );
+
+      const updatedNodes = workflows[currentWorkflowIndex].nodes.map((node) => {
+        if (node.id === payload.target) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              sourceId: payload.source,
+            },
+          };
+        }
+        return node;
+      });
+
+      workflows[currentWorkflowIndex].nodes = updatedNodes;
     },
 
-    setRunningWorkflow: (
-      { workflows, currentWorkflowIndex },
-      { payload },
-    ) => {
-      
+    setResultData: (state, { payload }) => {
+      state.resultColumns = payload.columns;
+      state.resultData = payload.results;
+      state.open = true;
+    },
+
+    setNodeData: (state, { payload }) => {
+      state.nodeData.push(payload);
     },
 
     toggleOpen: (state) => {
       state.open = !state.open;
+    },
+
+    setOpen: (state, { payload }) => {
+      state.open = payload as boolean;
     },
   },
   selectors: {
@@ -134,5 +167,9 @@ export const {
   onConnect,
   deleteNode,
   toggleOpen,
+  setResultData,
+  setNodeData,
+  setOpen,
+  deleteWorkflow,
 } = workflowSlice.actions;
 export const { selectWorkflow } = workflowSlice.selectors;

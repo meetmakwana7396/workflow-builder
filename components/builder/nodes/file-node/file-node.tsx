@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/lib/hooks";
 import {
   deleteNode,
-  updateNodeData,
+  setNodeData,
 } from "@/lib/features/workflows/workflowSlice";
 import { cn } from "@/lib/utils";
 import Papa from "papaparse";
@@ -20,17 +20,24 @@ const FileNode: React.FC<NodeProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [file, setFile] = useState<any>(null);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
     if (file) {
-      console.log(file, "file");
-
       setFile(file);
       Papa.parse(file, {
         dynamicTyping: true,
+        header: true,
         complete: function (results) {
           dispatch(
-            updateNodeData({ nodeId: id, data: { ...data, csvJson: results } }),
+            setNodeData({
+              nodeId: id,
+              data: {
+                ...data,
+                csvJson: results.data,
+                columns: results.meta.fields,
+              },
+            }),
           );
         },
       });
@@ -38,7 +45,7 @@ const FileNode: React.FC<NodeProps> = ({
   };
 
   return (
-    <div className={cn(styles.customNode, selected && "!border-blue-800")}>
+    <div className={cn(styles.customNode, selected && "!border-yellow-900/80")}>
       <div className="flex items-center justify-between border-b border-neutral-800 p-1 px-2 text-xs font-bold text-yellow-500">
         File
         <Button

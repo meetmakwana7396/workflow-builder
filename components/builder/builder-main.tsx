@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -14,14 +14,25 @@ import {
   onConnect,
   onEdgesChange,
   onNodesChange,
+  setOpen,
 } from "@/lib/features/workflows/workflowSlice";
 import { useRouter } from "next/navigation";
 import AddNodeButton from "./nodes/add-node-button";
 import FilterNode from "./nodes/transform-nodes/filter-node";
 import CollapsibleDataSection from "./collapsible-data-section";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import SortNode from "./nodes/transform-nodes/sort-node";
+import SliceNode from "./nodes/transform-nodes/slice-node";
+
+const nodeTypes = {
+  file: FileNode,
+  filter: FilterNode,
+  sort: SortNode,
+  slice: SliceNode,
+};
 
 const BuilderMain = () => {
-  const nodeTypes = useMemo(() => ({ file: FileNode, filter: FilterNode }), []);
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -42,6 +53,11 @@ const BuilderMain = () => {
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       <AddNodeButton />
+      <Button className="absolute left-5 top-40 z-10" asChild>
+        <Link href="/" onClick={() => dispatch(setOpen(false))}>
+          Dashboard
+        </Link>
+      </Button>
       <ReactFlowProvider>
         <ReactFlow
           nodes={nodes}

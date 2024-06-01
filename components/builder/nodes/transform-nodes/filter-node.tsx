@@ -1,11 +1,17 @@
 "use client";
 import styles from "@/app/styles/node.module.css";
-import { getConnectedEdges, Handle, NodeProps, Position } from "reactflow";
+import { Handle, NodeProps, Position } from "reactflow";
 import { X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  memoizedSourceNodeData,
+  useAppDispatch,
+  useAppSelector,
+} from "@/lib/hooks";
 import {
   deleteNode,
+  setNodeData,
+  setResultData,
   updateNodeData,
 } from "@/lib/features/workflows/workflowSlice";
 import Select from "@/components/ui/select";
@@ -37,9 +43,9 @@ const FilterNode: React.FC<NodeProps> = ({
   isConnectable,
   selected,
 }) => {
-  console.log(data, "filter node data");
-
   const dispatch = useAppDispatch();
+  const nodeData = useAppSelector(memoizedSourceNodeData);
+
   const [selectedColumn, setSelectedColumn] = useState({
     columnName: "",
     columnType: "",
@@ -47,52 +53,169 @@ const FilterNode: React.FC<NodeProps> = ({
   const [selectedCondition, setSelectedCondition] = useState<string>("");
   const [userInput, setUserInput] = useState<string | number | null>(null);
 
-  const { workflows, currentWorkflowIndex } = useAppSelector(
-    (state) => state.workflows,
-  );
+  const columns: string[] = nodeData?.find(
+    (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+  )?.data?.columns;
 
-  const connectedEdges = getConnectedEdges(
-    workflows[currentWorkflowIndex]?.nodes,
-    workflows[currentWorkflowIndex]?.edges,
-  );
+  const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const csvJson = nodeData.find(
+      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+    )?.data?.csvJson;
+    const value = e.target.value;
 
-  const sourceNodeId = connectedEdges.find(
-    (edge, index) => edge.target === id,
-  )?.source;
+    setSelectedColumn({
+      columnName: value,
+      columnType: typeof csvJson[0]?.[value],
+    });
+    setSelectedCondition("");
 
-  const sourceNode = workflows[currentWorkflowIndex].nodes.find(
-    (node) => node.id === sourceNodeId,
-  );
+    dispatch(
+      updateNodeData({
+        nodeId: id,
+        data: {
+          ...data,
+          columnName: value,
+          columnType: typeof csvJson[0]?.[value],
+        },
+      }),
+    );
+  };
 
-  const csvJson = sourceNode?.data?.csvJson?.data;
-  const columns = csvJson?.[0];
+  const handleConditionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCondition(e.target.value);
+    setUserInput("");
+    dispatch(
+      updateNodeData({
+        nodeId: id,
+        data: {
+          ...data,
+          condition: e.target.value,
+        },
+      }),
+    );
+  };
+
+  const handleUserInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInput(
+      selectedColumn.columnType === "number"
+        ? Number(e.target.value)
+        : e.target.value,
+    );
+    dispatch(
+      updateNodeData({
+        nodeId: id,
+        data: {
+          ...data,
+          userInput:
+            selectedColumn.columnType === "number"
+              ? Number(e.target.value)
+              : e.target.value,
+        },
+      }),
+    );
+  };
 
   const handleRun = () => {
-    const columnIndex = columns.findIndex(
-      (column: string) => column === selectedColumn.columnName,
-    );
+    const csvJson = nodeData.find(
+      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+    )?.data?.csvJson;
+
+    let results = [];
+
     if (selectedColumn.columnType === "string") {
       switch (selectedCondition) {
         case "text is exactly":
-          const result = csvJson
-            .slice(1)
-            .filter(
-              (row: string[]) =>
-                row[columnIndex] === "kjacklin8d@delicious.com",
-            );
-          console.log({ result });
-
+          results = csvJson.filter(
+            (row: any) =>
+              row[selectedColumn.columnName] === (userInput as string),
+          );
           break;
-
-        default:
+        case "text is not exactly":
+          results = csvJson.filter(
+            (row: any) =>
+              row[selectedColumn.columnName] !== (userInput as string),
+          );
+          break;
+        case "text includes":
+          results = csvJson.filter((row: any) =>
+            row[selectedColumn.columnName]
+              ?.toLowerCase()
+              .includes(userInput as string),
+          );
+          break;
+        case "text does not includes":
+          results = csvJson.filter(
+            (row: any) =>
+              !row[selectedColumn.columnName]
+                ?.toLowerCase()
+                .includes(userInput as string),
+          );
+          break;
+        case "data is not empty or null":
+          results = csvJson.filter(
+            (row: any) => !!row[selectedColumn.columnName],
+          );
           break;
       }
     } else {
+      switch (selectedCondition) {
+        case "number equals":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] === userInput,
+          );
+          break;
+        case "number is not equals":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] !== userInput,
+          );
+          break;
+        case "number greater than":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] > userInput!,
+          );
+          break;
+        case "number greater than or equals":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] >= userInput!,
+          );
+          break;
+        case "number less than":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] < userInput!,
+          );
+          break;
+        case "number less than or equals":
+          results = csvJson.filter(
+            (row: any) => row[selectedColumn.columnName] <= userInput!,
+          );
+          console.log("results", results);
+          break;
+        case "data is not empty or null":
+          results = csvJson.filter(
+            (row: any) => !!row[selectedColumn.columnName],
+          );
+          break;
+      }
     }
+    dispatch(
+      setResultData({
+        results,
+        columns,
+      }),
+    );
+    dispatch(
+      setNodeData({
+        nodeId: id,
+        data: {
+          csvJson: results,
+          columns,
+        },
+      }),
+    );
   };
 
   return (
-    <div className={cn(styles.customNode, selected && "!border-blue-800")}>
+    <div className={cn(styles.customNode, selected && "!border-yellow-900/80")}>
       <div className="flex items-center justify-between border-b border-neutral-800 p-1 px-2 text-xs font-bold text-yellow-500">
         Filter
         <Button
@@ -103,40 +226,21 @@ const FilterNode: React.FC<NodeProps> = ({
           <X className="size-3 shrink-0" />
         </Button>
       </div>
-      <div className="p-2 pr-4 space-y-2">
-        <div className="w-56">
+
+      <div className="min-w-56 space-y-2 p-2 pr-4">
+        <div>
           <Label size="xs">Column name:</Label>
           <Select
-            onChange={(e) => {
-              const name = e.target.value.split("-")[0];
-              const type = e.target.value.split("-")[1];
-              setSelectedColumn({
-                columnName: name,
-                columnType: typeof csvJson[1]?.[type],
-              });
-              dispatch(
-                updateNodeData({
-                  nodeId: id,
-                  data: {
-                    ...data,
-                    columnName: name,
-                    columnType: typeof csvJson[1]?.[type],
-                  },
-                }),
-              );
-            }}
+            value={selectedColumn.columnName}
+            onChange={handleColumnChange}
           >
             {!columns?.length ? (
               <option value="">{`<-- Select database`}</option>
             ) : (
               <option value="">Select Column</option>
             )}
-            {columns?.map((column: string, index: number) => (
-              <option
-                value={`${column}-${index}`}
-                key={column}
-                className="capitalize"
-              >
+            {columns?.map((column: string) => (
+              <option value={column} key={column} className="capitalize">
                 {column.replaceAll("_", " ")}
               </option>
             ))}
@@ -144,22 +248,9 @@ const FilterNode: React.FC<NodeProps> = ({
         </div>
 
         {!!selectedColumn.columnName && (
-          <div className="w-56">
+          <div>
             <Label size="xs">Condition:</Label>
-            <Select
-              onChange={(e) => {
-                setSelectedCondition(e.target.value);
-                dispatch(
-                  updateNodeData({
-                    nodeId: id,
-                    data: {
-                      ...data,
-                      condition: e.target.value,
-                    },
-                  }),
-                );
-              }}
-            >
+            <Select value={selectedCondition} onChange={handleConditionChange}>
               <option value="">Select condition</option>
               {selectedColumn.columnType === "number"
                 ? numericConditions.map((condition) => (
@@ -176,18 +267,26 @@ const FilterNode: React.FC<NodeProps> = ({
           </div>
         )}
 
-        {!!selectedCondition && selectedColumn.columnType === "string" && (
-          <Input type="text" />
-        )}
+        {!!selectedCondition &&
+          selectedCondition !== "data is not empty or null" && (
+            <Input
+              className="h-8 text-xs"
+              value={userInput as string}
+              type={selectedColumn?.columnType}
+              onChange={handleUserInputChange}
+            />
+          )}
       </div>
 
-      <Button
-        variant={"secondary"}
-        className="w-full rounded-none"
-        onClick={() => handleRun()}
-      >
-        Run
-      </Button>
+      {selectedColumn.columnName && selectedCondition && (
+        <Button
+          variant={"secondary"}
+          className="w-full rounded-none text-xs"
+          onClick={() => handleRun()}
+        >
+          Run
+        </Button>
+      )}
 
       <Handle
         type="target"

@@ -14,19 +14,16 @@ import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
 const inputNodes = ["File", "Paste", "Http Request", "Sheets", "Example Data"];
-const operationNodes = [
-  "Filter",
-  "Merge",
-  "Sort",
-  "Group",
-  "Slice",
-  "Rename Columns",
-];
+const operationNodes = ["Filter", "Merge", "Sort", "Slice"];
 
 const AddNodeButton = () => {
   const dispatch = useAppDispatch();
   const [tab, setTab] = useState("all");
   const [open, setOpen] = useState<boolean>();
+
+  function getRandomNumber(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   const handleAddNode = (nodeType: string) => {
     nodeType = nodeType.toLowerCase().replaceAll(" ", "_");
@@ -34,7 +31,10 @@ const AddNodeButton = () => {
       addNode({
         id: uuid(),
         type: nodeType,
-        position: { x: 200, y: 100 },
+        position: {
+          x: getRandomNumber(200, 800),
+          y: getRandomNumber(200, 800),
+        },
         data: { value: 123, color: "#fff" },
       }),
     );
@@ -116,14 +116,14 @@ const AddNodeButton = () => {
                     TRANSFORM
                   </h4>
                   <div className="grid grid-cols-3 gap-4">
-                    {operationNodes.map((inputNode) => (
+                    {operationNodes.map((node) => (
                       <div
-                        key={inputNode}
+                        key={node}
                         className="add-node-card"
                         role="button"
-                        onClick={() => handleAddNode(inputNode)}
+                        onClick={() => handleAddNode(node)}
                       >
-                        {inputNode}
+                        {node}
                       </div>
                     ))}
                   </div>
