@@ -16,7 +16,7 @@ import { v4 as uuid } from "uuid";
 const inputNodes = ["File", "Paste"];
 const operationNodes = ["Filter", "Map", "Sort", "Slice"];
 
-const AddNodeButton = () => {
+const AddNodeButton = ({ className }: { className?: string }) => {
   const dispatch = useAppDispatch();
   const [tab, setTab] = useState("all");
   const [open, setOpen] = useState<boolean>();
@@ -42,28 +42,28 @@ const AddNodeButton = () => {
   };
 
   return (
-    <div className="absolute left-5 top-5 z-10">
+    <div className={cn("z-10 sm:absolute sm:left-5 sm:top-5", className)}>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
-            className="mx-auto flex size-28 flex-col items-center justify-center gap-3 rounded-2xl bg-neutral-900 shadow-xl hover:bg-neutral-800"
+            className="flex h-full flex-col items-center justify-center gap-3 sm:rounded-2xl bg-neutral-900 shadow-xl hover:bg-neutral-800 sm:mx-auto sm:size-28"
             role="button"
           >
             <Plus className="shrink-0" />
-            <span className="text-xs text-neutral-500">Add nodes</span>
+            <span className="text-xs hidden sm:block text-neutral-500">Add nodes</span>
           </Button>
         </DialogTrigger>
         <DialogContent maxWidth="1024px">
           <DialogHeader>Node library</DialogHeader>
           <div className="flex">
-            <div className="w-full max-w-[20%] pe-4">
+            <div className="w-full max-w-[30%] sm:max-w-[20%] sm:pe-4">
               <ul className="text-neutral-500">
                 <li
                   role="button"
                   className={cn("add-node-nav-item", tab === "all" && "active")}
                   onClick={() => setTab("all")}
                 >
-                  <GridFour className="size-5" />
+                  <GridFour className="size-4 shrink-0 sm:size-5" />
                   All
                 </li>
                 <li
@@ -74,7 +74,7 @@ const AddNodeButton = () => {
                   )}
                   onClick={() => setTab("input")}
                 >
-                  <PlusCircle className="size-5" />
+                  <PlusCircle className="size-4 shrink-0 sm:size-5" />
                   INPUT
                 </li>
                 <li
@@ -85,18 +85,18 @@ const AddNodeButton = () => {
                   )}
                   onClick={() => setTab("transform")}
                 >
-                  <Atom className="size-5" />
+                  <Atom className="size-4 shrink-0 sm:size-5" />
                   TRANSFORM
                 </li>
               </ul>
             </div>
-            <div className="h-[700px] w-full space-y-10 overflow-y-auto px-8 pb-20 pt-10">
+            <div className="h-auto max-h-[400px] w-full space-y-10 overflow-y-auto px-8 pb-20 pt-10 sm:max-h-[700px]">
               {(tab === "all" || tab === "input") && (
                 <div className="flex flex-col gap-4">
                   <h4 className="font-semibold tracking-widest text-neutral-200">
                     INPUT
                   </h4>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="sm:grid-col-2 grid gap-4 md:grid-cols-3">
                     {inputNodes.map((inputNode) => (
                       <div
                         key={inputNode}
@@ -115,7 +115,7 @@ const AddNodeButton = () => {
                   <h4 className="font-semibold tracking-widest text-neutral-200">
                     TRANSFORM
                   </h4>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="sm:grid-col-2 grid gap-4 md:grid-cols-3">
                     {operationNodes.map((node) => (
                       <div
                         key={node}

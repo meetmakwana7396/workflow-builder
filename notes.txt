@@ -1,5 +1,3 @@
 Remaining Tasks:
- - Save flow button to store it in local storage
- - Merge method implementation
  - Large amount data performance improvement
  - Improve overall code

@@ -65,6 +65,7 @@ export default function CreateWorkflowButton() {
               {...register("description")}
             />
             <DialogFooter>
+              <Button type="submit">Create</Button>
               <Button
                 variant="outline"
                 size="lg"
@@ -73,7 +74,6 @@ export default function CreateWorkflowButton() {
               >
                 Cancel
               </Button>
-              <Button type="submit">Create</Button>
             </DialogFooter>
           </form>
         </DialogContent>

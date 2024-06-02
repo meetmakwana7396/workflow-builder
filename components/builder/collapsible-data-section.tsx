@@ -32,9 +32,8 @@ export default function CollapsibleDataSection() {
     <div
       className={cn(
         "fixed bottom-0 w-full bg-neutral-900",
-        open && "border-t border-blue-500",
+        open && "border-t border-blue-500 sm:h-[350px] h-[250px]",
       )}
-      style={{ height: open ? "350px" : "0px" }}
     >
       <div
         role="button"

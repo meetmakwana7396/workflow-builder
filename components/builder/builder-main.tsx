@@ -81,11 +81,13 @@ const BuilderMain = () => {
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
-      <AddNodeButton />
+      <AddNodeButton className="hidden sm:block" />
 
       <div className="absolute w-full pt-2">
         <div className="relative flex justify-center gap-4">
-          <Button asChild className="z-10 bg-blue-500">
+          <AddNodeButton className="block sm:hidden" />
+
+          <Button asChild className="z-10">
             <Link
               href="/"
               onClick={() => {
@@ -99,7 +101,7 @@ const BuilderMain = () => {
           </Button>
           <Button
             className={cn(
-              "z-10 bg-blue-500",
+              "z-10",
               saveEffect && "bg-green-500 hover:bg-green-500",
             )}
             onClick={handleSaveWorkflow}

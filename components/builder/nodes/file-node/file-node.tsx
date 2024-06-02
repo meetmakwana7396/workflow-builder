@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "@/app/styles/node.module.css";
 import { Handle, NodeProps, Position } from "reactflow";
-import { X } from "@phosphor-icons/react";
+import { File, X } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/lib/hooks";
 import {
@@ -12,6 +12,31 @@ import {
 import { cn } from "@/lib/utils";
 import Papa from "papaparse";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+const csvFiles = [
+  {
+    name: "1000-sales-records.csv",
+    path: "/csv/1000-sales-records.csv",
+  },
+  {
+    name: "5000-sales-records.csv",
+    path: "/csv/5000-sales-records.csv",
+  },
+  {
+    name: "10000-sales-records.csv",
+    path: "/csv/10000-sales-records.csv",
+  },
+  {
+    name: "50000-sales-records.csv",
+    path: "/csv/50000-sales-records.csv",
+  },
+];
 
 const FileNode: React.FC<NodeProps> = ({
   id,
@@ -23,14 +48,31 @@ const FileNode: React.FC<NodeProps> = ({
   const router = useRouter();
   const [file, setFile] = useState<any>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event?.target?.files?.[0];
-    if (file) {
-      setFile(file);
-      Papa.parse(file, {
-        dynamicTyping: true,
+  const handleFileChange = async (path: string) => {
+    // const file = event?.target?.files?.[0];
+    // if (file) {
+    //   setFile(file);
+    //   Papa.parse(file, {
+    //     dynamicTyping: true,
+    //     header: true,
+    //     complete: function (results) {},
+    //   });
+    // }
+
+    try {
+      const response = await fetch(path);
+      const reader = response?.body?.getReader();
+      const result = await reader?.read();
+      const decoder = new TextDecoder("utf-8");
+      const csv = decoder.decode(result?.value);
+
+      Papa.parse(csv, {
         header: true,
-        complete: function (results) {
+        dynamicTyping: true,
+
+        complete: (results) => {
+          console.log(results);
+
           dispatch(
             setNodeData({
               nodeId: id,
@@ -41,7 +83,12 @@ const FileNode: React.FC<NodeProps> = ({
             }),
           );
         },
+        error: (err: any) => {
+          console.log(err.message);
+        },
       });
+    } catch (err: any) {
+      console.log(err.message);
     }
   };
 
@@ -66,18 +113,43 @@ const FileNode: React.FC<NodeProps> = ({
         ) : (
           <>
             <div className="text-xs">Drop file here or:</div>
-            <label
-              className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
-              role="button"
-            >
-              Open file dialog
-              <input
+            <Dialog>
+              <DialogTrigger>
+                <label
+                  className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
+                  role="button"
+                >
+                  Open file dialog
+                  {/* <input
                 className="nodrag"
                 type="file"
                 onChange={handleFileChange}
                 hidden
-              />
-            </label>
+              /> */}
+                </label>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>Select database file</DialogHeader>
+                <div className="h-full min-h-80">
+                  <div className="grid grid-cols-5 gap-4">
+                    {csvFiles?.map((elem, index: number) => (
+                      <div
+                        key={index}
+                        role="button"
+                        onClick={() => handleFileChange(elem.path)}
+                        className="flex flex-col items-center justify-start gap-2 p-4 text-center hover:bg-white/10"
+                      >
+                        <File
+                          className="size-12 fill-neutral-700"
+                          weight="fill"
+                        />
+                        <span className="text-xs">{elem.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </>
         )}
       </div>
