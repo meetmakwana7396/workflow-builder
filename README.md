@@ -1,29 +1,69 @@
-# Redux Toolkit TypeScript Example
+## Drag & Drop Workflow Builder
 
-This example shows how to integrate Next.js with [Redux Toolkit](https://redux-toolkit.js.org).
+### Project Description
 
-**Redux Toolkit**(also known as "RTK" for short) provides a standardized way to write Redux logic. It includes utilities that help simplify many common use cases, including [store setup](https://redux-toolkit.js.org/api/configureStore), [creating reducers and writing immutable update logic](https://redux-toolkit.js.org/api/createreducer), and even [creating entire "slices" of state at once](https://redux-toolkit.js.org/api/createslice). This example showcases each of these features in conjunction with Next.js.
+The Drag & Drop Workflow Builder application allows users to create, edit, and visualize complex workflows through an intuitive drag-and-drop interface. Users can add various types of nodes representing different operations (e.g., filter, find, reduce, map, array methods) onto a canvas and draw connections between them to define the workflow logic.
 
-## Deploy Your Own
+This tool is designed to handle dynamic operations on large datasets, including multiple CSV files that may contain millions of records. Users can perform various operations on the data and view the final results on their selected CSV files.
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example):
+### Features
+- **Drag and Drop Interface**: Easily create and arrange workflow nodes on a canvas.
+- **Node Types**: Support for various data operations including filter, sort, map, slice, and array methods.
+- **Dynamic Data Operations**: Perform operations on large datasets efficiently.
+- **CSV Support**: Import and process CSV files with millions of records.
+- **Visualization**: Visualize the output data in table format.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-redux&project-name=with-redux&repository-name=with-redux)
+### Technologies Used
+- **Next.js**: React framework for server-side rendering and building static web applications.
+- **Reactflow**: For building node-based editor and interactive diagrams.
+- **Papaparse**: For parsing CSV files.
+- **Redux**: For state management.
+- **Tailwind CSS**: For styling the application.
 
-## How to Use
+### Installation Guide
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
+Follow these steps to set up the project locally:
 
+#### Prerequisites
+- **Node.js** (>= 14.x)
+- **npm** (>= 6.x) or **yarn** (>= 1.x)
+- **Git**
+
+#### Clone the Repository
+First, clone the repository from GitHub:
 ```bash
-npx create-next-app --example with-redux with-redux-app
+git clone https://github.com/yourusername/workflow-builder.git
+cd workflow-builder
 ```
 
+#### Install Dependencies
+Install the required dependencies using npm or yarn:
 ```bash
-yarn create next-app --example with-redux with-redux-app
+npm install
 ```
 
+#### Running the Application
+To run the application in development mode:
 ```bash
-pnpm create next-app --example with-redux with-redux-app
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+#### Building for Production
+To build the application for production:
+```bash
+npm run build
+```
+This will create an optimized production build in the `.next` folder.
+
+To start the production server:
+```bash
+npm start
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+### Usage
+
+1. **Upload CSV Files**: Begin by uploading your CSV files through the provided interface.
+2. **Create Workflows**: Drag and drop different nodes onto the canvas to create your workflow. Connect the nodes to define the data processing steps.
+3. **Execute Workflow**: Once your workflow is defined, execute it to process the data and view the results.
+4. **Visualize Results**: The results of the data processing can be visualized directly within the application.
