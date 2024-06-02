@@ -48,29 +48,14 @@ const FileNode: React.FC<NodeProps> = ({
   const router = useRouter();
   const [file, setFile] = useState<any>(null);
 
-  const handleFileChange = async (path: string) => {
-    // const file = event?.target?.files?.[0];
-    // if (file) {
-    //   setFile(file);
-    //   Papa.parse(file, {
-    //     dynamicTyping: true,
-    //     header: true,
-    //     complete: function (results) {},
-    //   });
-    // }
-
-    try {
-      const response = await fetch(path);
-      const reader = response?.body?.getReader();
-      const result = await reader?.read();
-      const decoder = new TextDecoder("utf-8");
-      const csv = decoder.decode(result?.value);
-
-      Papa.parse(csv, {
-        header: true,
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event?.target?.files?.[0];
+    if (file) {
+      setFile(file);
+      Papa.parse(file, {
         dynamicTyping: true,
-
-        complete: (results) => {
+        header: true,
+        complete: function (results) {
           dispatch(
             setNodeData({
               nodeId: id,
@@ -81,12 +66,7 @@ const FileNode: React.FC<NodeProps> = ({
             }),
           );
         },
-        error: (err: any) => {
-          console.log(err.message);
-        },
       });
-    } catch (err: any) {
-      console.log(err.message);
     }
   };
 
@@ -105,52 +85,25 @@ const FileNode: React.FC<NodeProps> = ({
           <X className="size-3 shrink-0" />
         </Button>
       </div>
+
       <div className="flex items-center justify-center gap-2 p-4">
         {file ? (
-          <div className="text-xs">File name: &quot;{file}&quot;</div>
+          <div className="text-xs">File name: &quot;{file?.name}&quot;</div>
         ) : (
           <>
-            <div className="text-xs">Select file:</div>
-            <Dialog>
-              <DialogTrigger>
-                <label
-                  className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
-                  role="button"
-                >
-                  Open file dialog
-                  {/* <input
+            <div className="text-xs">Drop file here or:</div>
+            <label
+              className="rounded bg-white/10 p-2 text-[10px] font-semibold text-white shadow-md hover:bg-white/20"
+              role="button"
+            >
+              Open file dialog
+              <input
                 className="nodrag"
                 type="file"
                 onChange={handleFileChange}
                 hidden
-              /> */}
-                </label>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>Select database file</DialogHeader>
-                <div className="h-full min-h-80">
-                  <div className="grid grid-cols-5 gap-4">
-                    {csvFiles?.map((elem, index: number) => (
-                      <div
-                        key={index}
-                        role="button"
-                        onClick={() => {
-                          setFile(elem.name);
-                          handleFileChange(elem.path);
-                        }}
-                        className="flex flex-col items-center justify-start gap-2 p-4 text-center hover:bg-white/10"
-                      >
-                        <File
-                          className="size-12 fill-neutral-700"
-                          weight="fill"
-                        />
-                        <span className="text-xs">{elem.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+              />
+            </label>
           </>
         )}
       </div>
