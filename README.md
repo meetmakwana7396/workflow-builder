@@ -32,7 +32,7 @@ Follow these steps to set up the project locally:
 #### Clone the Repository
 First, clone the repository from GitHub:
 ```bash
-git clone https://github.com/yourusername/workflow-builder.git
+git clone https://github.com/meetmakwana7396/workflow-builder.git
 cd workflow-builder
 ```
 
