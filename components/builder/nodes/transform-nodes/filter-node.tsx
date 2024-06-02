@@ -10,6 +10,7 @@ import {
 } from "@/lib/hooks";
 import {
   deleteNode,
+  NodeData,
   setNodeData,
   setResultData,
   updateNodeData,
@@ -44,7 +45,7 @@ const FilterNode: React.FC<NodeProps> = ({
   selected,
 }) => {
   const dispatch = useAppDispatch();
-  const nodeData = useAppSelector(memoizedSourceNodeData);
+  const nodeData: NodeData[] = useAppSelector(memoizedSourceNodeData);
 
   const [selectedColumn, setSelectedColumn] = useState({
     columnName: "",
@@ -53,19 +54,18 @@ const FilterNode: React.FC<NodeProps> = ({
   const [selectedCondition, setSelectedCondition] = useState<string>("");
   const [userInput, setUserInput] = useState<string | number | null>(null);
 
-  const columns: string[] = nodeData?.find(
-    (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+  const columns: string[] | undefined = nodeData?.findLast(
+    (d) => d.nodeId === data.sourceId,
   )?.data?.columns;
 
   const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const csvJson = nodeData.find(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.findLast((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
     const value = e.target.value;
 
     setSelectedColumn({
       columnName: value,
-      columnType: typeof csvJson[0]?.[value],
+      columnType: typeof csvJson?.[0]?.[value],
     });
     setSelectedCondition("");
 
@@ -75,7 +75,7 @@ const FilterNode: React.FC<NodeProps> = ({
         data: {
           ...data,
           columnName: value,
-          columnType: typeof csvJson[0]?.[value],
+          columnType: typeof csvJson?.[0]?.[value],
         },
       }),
     );
@@ -116,43 +116,43 @@ const FilterNode: React.FC<NodeProps> = ({
   };
 
   const handleRun = () => {
-    const csvJson = nodeData.find(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.find((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
+    console.log(csvJson, "csvJson");
 
-    let results = [];
+    let results: any = [];
 
     if (selectedColumn.columnType === "string") {
       switch (selectedCondition) {
         case "text is exactly":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) =>
               row[selectedColumn.columnName] === (userInput as string),
           );
           break;
         case "text is not exactly":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) =>
               row[selectedColumn.columnName] !== (userInput as string),
           );
           break;
         case "text includes":
-          results = csvJson.filter((row: any) =>
+          results = csvJson?.filter((row: any) =>
             row[selectedColumn.columnName]
               ?.toLowerCase()
-              .includes(userInput as string),
+              .includes((userInput as string)?.toLowerCase()),
           );
           break;
         case "text does not includes":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) =>
               !row[selectedColumn.columnName]
                 ?.toLowerCase()
-                .includes(userInput as string),
+                .includes((userInput as string)?.toLowerCase()),
           );
           break;
         case "data is not empty or null":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => !!row[selectedColumn.columnName],
           );
           break;
@@ -160,43 +160,45 @@ const FilterNode: React.FC<NodeProps> = ({
     } else {
       switch (selectedCondition) {
         case "number equals":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] === userInput,
           );
           break;
         case "number is not equals":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] !== userInput,
           );
           break;
         case "number greater than":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] > userInput!,
           );
           break;
         case "number greater than or equals":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] >= userInput!,
           );
           break;
         case "number less than":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] < userInput!,
           );
           break;
         case "number less than or equals":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => row[selectedColumn.columnName] <= userInput!,
           );
           console.log("results", results);
           break;
         case "data is not empty or null":
-          results = csvJson.filter(
+          results = csvJson?.filter(
             (row: any) => !!row[selectedColumn.columnName],
           );
           break;
       }
     }
+    console.log(results, "results");
+
     dispatch(
       setResultData({
         results,

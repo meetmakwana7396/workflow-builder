@@ -13,8 +13,8 @@ import { Atom, GridFour, Plus, PlusCircle } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
-const inputNodes = ["File", "Paste", "Http Request", "Sheets", "Example Data"];
-const operationNodes = ["Filter", "Merge", "Sort", "Slice"];
+const inputNodes = ["File", "Paste"];
+const operationNodes = ["Filter", "Map", "Sort", "Slice"];
 
 const AddNodeButton = () => {
   const dispatch = useAppDispatch();

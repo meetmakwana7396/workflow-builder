@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { CaretUp, SmileySad } from "@phosphor-icons/react";
 import { Button } from "../ui/button";
 import Papa from "papaparse";
-import { useState } from "react";
 
 export default function CollapsibleDataSection() {
   const dispatch = useAppDispatch();
@@ -29,9 +28,6 @@ export default function CollapsibleDataSection() {
     URL.revokeObjectURL(url);
   }
 
-  console.log(resultData);
-  
-
   return (
     <div
       className={cn(
@@ -43,7 +39,7 @@ export default function CollapsibleDataSection() {
       <div
         role="button"
         onClick={() => dispatch(toggleOpen())}
-        className="absolute -top-8 left-1/2 flex h-8 -translate-x-1/2 items-center justify-center gap-2 border border-b-0 border-blue-500 bg-neutral-900 px-4 py-2 text-xs"
+        className="absolute -top-8 left-20 flex h-8 items-center justify-center gap-2 border border-b-0 border-blue-500 bg-neutral-900 px-4 py-2 text-xs"
       >
         <CaretUp className={cn("size-3", open && "rotate-180")} />
         Output
@@ -73,7 +69,7 @@ export default function CollapsibleDataSection() {
             Total records:{" "}
             <span className="text-blue-500">{resultData.length}</span>
           </div>
-          <div className="relative h-[100%] overflow-y-auto pb-10 scroll-smooth shadow-md">
+          <div className="relative h-[100%] overflow-y-auto scroll-smooth pb-10 shadow-md">
             <table className="divide-y divide-neutral-600">
               <thead className="sticky top-0 bg-black">
                 <tr>

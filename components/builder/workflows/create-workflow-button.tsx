@@ -69,6 +69,7 @@ export default function CreateWorkflowButton() {
                 variant="outline"
                 size="lg"
                 onClick={() => setOpen(false)}
+                type="button"
               >
                 Cancel
               </Button>

@@ -10,6 +10,7 @@ import {
 } from "@/lib/hooks";
 import {
   deleteNode,
+  NodeData,
   setNodeData,
   setResultData,
   updateNodeData,
@@ -26,7 +27,7 @@ const SortNode: React.FC<NodeProps> = ({
   selected,
 }) => {
   const dispatch = useAppDispatch();
-  const nodeData: Array<any> = useAppSelector(memoizedSourceNodeData);
+  const nodeData: NodeData[] = useAppSelector(memoizedSourceNodeData);
 
   const [selectedColumn, setSelectedColumn] = useState({
     columnName: "",
@@ -34,19 +35,18 @@ const SortNode: React.FC<NodeProps> = ({
   });
   const [selectedOrder, setSelectedOrder] = useState<string>("");
 
-  const columns: string[] = nodeData?.find(
-    (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+  const columns: string[] | undefined = nodeData?.find(
+    (d) => d.nodeId === data.sourceId,
   )?.data?.columns;
 
   const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const csvJson = nodeData.find(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.find((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
     const value = e.target.value;
 
     setSelectedColumn({
       columnName: value,
-      columnType: typeof csvJson[0]?.[value],
+      columnType: typeof csvJson?.[0]?.[value],
     });
     setSelectedOrder("");
 
@@ -56,7 +56,7 @@ const SortNode: React.FC<NodeProps> = ({
         data: {
           ...data,
           columnName: value,
-          columnType: typeof csvJson[0]?.[value],
+          columnType: typeof csvJson?.[0]?.[value],
         },
       }),
     );
@@ -75,37 +75,36 @@ const SortNode: React.FC<NodeProps> = ({
     );
   };
 
-  function sortArray(arr: Array<any>, columnName: string, order: string) {
-    // Create a shallow copy of the array to avoid mutating the original array
-    const sortedArray = [...arr];
+  function sortArray(arr: any, columnName: string, order: string) {
+    if (arr) {
+      const sortedArray = [...arr];
 
-    // Perform the sorting
-    sortedArray.sort((a, b) => {
-      if (
-        typeof a[columnName] === "number" &&
-        typeof b[columnName] === "number"
-      ) {
-        return order === "asc"
-          ? a[columnName] - b[columnName]
-          : b[columnName] - a[columnName];
-      } else if (
-        typeof a[columnName] === "string" &&
-        typeof b[columnName] === "string"
-      ) {
-        const comparison = a[columnName].localeCompare(b[columnName]);
-        return order === "asc" ? comparison : -comparison;
-      } else {
-        return 0;
-      }
-    });
+      sortedArray.sort((a: any, b: any) => {
+        if (
+          typeof a[columnName] === "number" &&
+          typeof b[columnName] === "number"
+        ) {
+          return order === "asc"
+            ? a[columnName] - b[columnName]
+            : b[columnName] - a[columnName];
+        } else if (
+          typeof a[columnName] === "string" &&
+          typeof b[columnName] === "string"
+        ) {
+          const comparison = a[columnName].localeCompare(b[columnName]);
+          return order === "asc" ? comparison : -comparison;
+        } else {
+          return 0;
+        }
+      });
 
-    return sortedArray;
+      return sortedArray;
+    }
   }
 
   const handleRun = () => {
-    const csvJson = nodeData.findLast(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.findLast((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
 
     console.log(csvJson, "csvJson");
 

@@ -11,6 +11,7 @@ import {
 } from "@/lib/features/workflows/workflowSlice";
 import { cn } from "@/lib/utils";
 import Papa from "papaparse";
+import { useRouter } from "next/navigation";
 
 const FileNode: React.FC<NodeProps> = ({
   id,
@@ -19,6 +20,7 @@ const FileNode: React.FC<NodeProps> = ({
   selected,
 }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [file, setFile] = useState<any>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +35,6 @@ const FileNode: React.FC<NodeProps> = ({
             setNodeData({
               nodeId: id,
               data: {
-                ...data,
                 csvJson: results.data,
                 columns: results.meta.fields,
               },
@@ -51,7 +52,10 @@ const FileNode: React.FC<NodeProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => dispatch(deleteNode(id))}
+          onClick={() => {
+            dispatch(deleteNode(id));
+            router.refresh();
+          }}
         >
           <X className="size-3 shrink-0" />
         </Button>

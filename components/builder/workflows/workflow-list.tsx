@@ -3,19 +3,36 @@
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import CreateWorkflowButton from "./create-workflow-button";
 import {
+  addWorkflow,
   deleteWorkflow,
   setCurrentWorkflowId,
+  setWorkflows,
   Workflow,
 } from "@/lib/features/workflows/workflowSlice";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlass, Trash } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 export default function WorkflowList() {
+  const { workflows } = useAppSelector((state) => state.workflows);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { workflows } = useAppSelector((state) => state.workflows);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (workflows?.length <= 0) {
+      console.log(localStorage.getItem("workflows"), "JFSBFB");
+      const localStorageWorkflows = JSON.parse(
+        localStorage.getItem("workflows") as string,
+      );
+      localStorageWorkflows?.length > 0 &&
+        dispatch(setWorkflows(localStorageWorkflows));
+    }
+    setIsLoading(false);
+  }, [workflows, dispatch]);
 
   return (
     <div>
@@ -34,8 +51,24 @@ export default function WorkflowList() {
           </div>
         </div>
       )}
-      {/* <hr className="my-4 border-neutral-800" /> */}
-      {workflows?.length === 0 && (
+
+      {isLoading && (
+        <div className="mt-6 flex flex-col gap-6">
+          <div className="flex h-14 w-full animate-pulse rounded-lg bg-neutral-900" />
+          <div className="grid animate-pulse grid-cols-3 gap-6">
+            {Array(6)
+              .fill(0)
+              .map((ele, index) => (
+                <div
+                  key={index}
+                  className="h-56 w-full rounded-xl bg-neutral-900"
+                />
+              ))}
+          </div>
+        </div>
+      )}
+
+      {!isLoading && !!workflows && workflows?.length <= 0 && (
         <div className="mt-6 flex flex-col gap-6 text-neutral-500">
           You haven&apos;t created any workflow yet!
           <CreateWorkflowButton />

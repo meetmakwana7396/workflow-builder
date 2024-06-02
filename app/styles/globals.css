@@ -18,7 +18,7 @@
 }
 
 .add-node-card {
-  @apply h-40 w-full rounded bg-neutral-900 p-4 text-neutral-300 shadow-lg transition hover:scale-105 hover:ring-2;
+  @apply h-40 w-full rounded bg-neutral-900 p-4 text-neutral-300 hover:scale-100 hover:ring-2;
 }
 
 .react-flow__controls-button {
@@ -26,11 +26,11 @@
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

@@ -10,49 +10,43 @@ import {
 } from "@/lib/hooks";
 import {
   deleteNode,
-  NodeData,
   setNodeData,
   setResultData,
 } from "@/lib/features/workflows/workflowSlice";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
 
-const SliceNode: React.FC<NodeProps> = ({
+const MapNode: React.FC<NodeProps> = ({
   id,
   data,
   isConnectable,
   selected,
 }) => {
   const dispatch = useAppDispatch();
-  const nodeData: NodeData[] = useAppSelector(memoizedSourceNodeData);
+  const nodeData: Array<any> = useAppSelector(memoizedSourceNodeData);
 
-  const [sliceIndices, setSliceIndices] = useState<{
-    from: number | string;
-    to: number | string;
-  }>({
-    from: "",
-    to: "",
-  });
-
-  const columns: string[] | undefined = nodeData?.find(
+  const columns: string[] = nodeData?.find(
     (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
   )?.data?.columns;
+
+  const getCsvJson = () => {
+    const csvJson = nodeData.findLast(
+      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+    )?.data?.csvJson;
+
+    return csvJson;
+  };
+
+  console.log(getCsvJson());
+  
 
   const handleRun = () => {
     const csvJson = nodeData.findLast(
       (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
     )?.data?.csvJson;
 
-    let results: any = [];
-    results = csvJson?.slice(
-      !sliceIndices.from ? 0 : (sliceIndices.from as number),
-      !sliceIndices.to ? csvJson?.length : (sliceIndices.to as number),
-    );
-
     dispatch(
       setResultData({
-        results,
+        results: csvJson,
         columns,
       }),
     );
@@ -60,7 +54,7 @@ const SliceNode: React.FC<NodeProps> = ({
       setNodeData({
         nodeId: id,
         data: {
-          csvJson: results,
+          csvJson: csvJson,
           columns,
         },
       }),
@@ -70,7 +64,7 @@ const SliceNode: React.FC<NodeProps> = ({
   return (
     <div className={cn(styles.customNode, selected && "!border-yellow-900/80")}>
       <div className="flex items-center justify-between border-b border-neutral-800 p-1 px-2 text-xs font-bold text-yellow-500">
-        Slice
+        Map
         <Button
           variant="ghost"
           size="icon"
@@ -81,27 +75,14 @@ const SliceNode: React.FC<NodeProps> = ({
       </div>
 
       <div className="min-w-56 space-y-2 p-2 pr-4">
-        <Input
-          className="h-8 text-xs"
-          value={sliceIndices.from}
-          type="number"
-          placeholder="from index"
-          onChange={(e) =>
-            setSliceIndices({ ...sliceIndices, from: Number(e.target.value) })
-          }
-        />
-        <Input
-          className="h-8 text-xs"
-          value={sliceIndices.to}
-          type="number"
-          placeholder="to index"
-          onChange={(e) =>
-            setSliceIndices({ ...sliceIndices, to: Number(e.target.value) })
-          }
-        />
+        <div className="flex h-10 items-center text-xs">
+          {getCsvJson()?.length > 0
+            ? getCsvJson()?.length
+            : `<-- Select database`}
+        </div>
       </div>
 
-      {!!(sliceIndices?.from || sliceIndices?.to) && (
+      {true && (
         <Button
           variant={"secondary"}
           className="w-full rounded-none text-xs"
@@ -114,7 +95,7 @@ const SliceNode: React.FC<NodeProps> = ({
       <Handle
         type="target"
         position={Position.Left}
-        id="filterHandle"
+        id="filterHandle2"
         className={styles.roundedLeftHandle}
         isConnectable={isConnectable}
       />
@@ -129,4 +110,4 @@ const SliceNode: React.FC<NodeProps> = ({
   );
 };
 
-export default SliceNode;
+export default MapNode;

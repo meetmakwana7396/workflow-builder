@@ -16,6 +16,11 @@ export interface Workflow {
   edges: Edge[];
 }
 
+export interface NodeData {
+  nodeId: string;
+  data: { csvJson: Array<any>; columns: string[] };
+}
+
 const sampleWorkflow = {
   id: "1",
   name: "sample",
@@ -48,6 +53,10 @@ export const workflowSlice = createSlice({
   name: "workflows",
   initialState,
   reducers: {
+    setWorkflows: (state, { payload }) => {
+      state.workflows = payload;
+    },
+
     addWorkflow: (state, { payload }) => {
       state.workflows.push({
         ...sampleWorkflow,
@@ -61,7 +70,11 @@ export const workflowSlice = createSlice({
       state.workflows = state.workflows.filter(
         (workflow) => workflow.id !== payload,
       );
-      console.log(state.workflows, "yo");
+      let localData = JSON.parse(localStorage.getItem("workflows") as string);
+      if (localData.length > 0) {
+        localData = localData.filter((data: Workflow) => data.id !== payload);
+        localStorage.setItem("workflows", JSON.stringify(localData));
+      }
     },
 
     setCurrentWorkflowId: (state, { payload }) => {
@@ -92,10 +105,19 @@ export const workflowSlice = createSlice({
       state.workflows[currentWorkflowIndex].nodes = updatedNodes;
     },
 
-    deleteNode: ({ workflows, currentWorkflowIndex }, { payload }) => {
+    emptyResultData: (state) => {
+      state.resultData = [];
+      state.resultColumns = [];
+    },
+
+    deleteNode: (
+      { workflows, currentWorkflowIndex, nodeData },
+      { payload },
+    ) => {
       workflows[currentWorkflowIndex].nodes = workflows[
         currentWorkflowIndex
       ].nodes.filter((node) => node.id !== payload);
+      nodeData = nodeData.filter((d: any) => console.log(d, "Node Data"));
     },
 
     onNodesChange: ({ workflows, currentWorkflowIndex }, { payload }) => {
@@ -171,5 +193,7 @@ export const {
   setNodeData,
   setOpen,
   deleteWorkflow,
+  emptyResultData,
+  setWorkflows,
 } = workflowSlice.actions;
 export const { selectWorkflow } = workflowSlice.selectors;
