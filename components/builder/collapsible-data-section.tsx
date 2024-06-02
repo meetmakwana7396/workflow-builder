@@ -17,6 +17,7 @@ export default function CollapsibleDataSection() {
   const dispatch = useAppDispatch();
   const { open, resultData, resultColumns } =
     useAppSelector(memoizedResultData);
+  console.count("resultData");
 
   function downloadFile(content: string, fileName: string, mimeType: string) {
     const a = document.createElement("a");
@@ -32,7 +33,7 @@ export default function CollapsibleDataSection() {
     <div
       className={cn(
         "fixed bottom-0 w-full bg-neutral-900",
-        open && "border-t border-blue-500 sm:h-[350px] h-[250px]",
+        open && "h-[250px] border-t border-blue-500 sm:h-[350px]",
       )}
     >
       <div

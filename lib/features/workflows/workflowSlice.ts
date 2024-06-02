@@ -157,6 +157,7 @@ export const workflowSlice = createSlice({
     },
 
     setResultData: (state, { payload }) => {
+      console.count("resultdata reducer");
       state.resultColumns = payload.columns;
       state.resultData = payload.results;
       state.open = true;

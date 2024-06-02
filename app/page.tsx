@@ -1,9 +1,5 @@
-import type { Metadata } from "next";
+"use client";
 import WorkflowList from "@/components/builder/workflows/workflow-list";
-
-export const metadata: Metadata = {
-  title: "Workflow Builder - by Meet Makwana",
-};
 
 export default function IndexPage() {
   return (
