@@ -33,7 +33,7 @@ const AddNodeButton = ({ className }: { className?: string }) => {
         type: nodeType,
         position: {
           x: getRandomNumber(200, 800),
-          y: getRandomNumber(200, 800),
+          y: getRandomNumber(200, 400),
         },
         data: { value: 123, color: "#fff" },
       }),
