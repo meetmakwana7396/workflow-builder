@@ -13,7 +13,7 @@ import { Atom, GridFour, Plus, PlusCircle } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 
-const inputNodes = ["File", "Paste"];
+const inputNodes = ["File"];
 const operationNodes = ["Filter", "Map", "Sort", "Slice"];
 
 const AddNodeButton = ({ className }: { className?: string }) => {
@@ -46,11 +46,13 @@ const AddNodeButton = ({ className }: { className?: string }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
-            className="flex h-full flex-col items-center justify-center gap-3 sm:rounded-2xl bg-neutral-900 shadow-xl hover:bg-neutral-800 sm:mx-auto sm:size-28"
+            className="flex h-full flex-col items-center justify-center gap-3 bg-neutral-900 shadow-xl hover:bg-neutral-800 sm:mx-auto sm:size-28 sm:rounded-2xl"
             role="button"
           >
             <Plus className="shrink-0" />
-            <span className="text-xs hidden sm:block text-neutral-500">Add nodes</span>
+            <span className="hidden text-xs text-neutral-500 sm:block">
+              Add nodes
+            </span>
           </Button>
         </DialogTrigger>
         <DialogContent maxWidth="1024px">
