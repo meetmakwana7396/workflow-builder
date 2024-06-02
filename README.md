@@ -25,8 +25,8 @@ This tool is designed to handle dynamic operations on large datasets, including 
 Follow these steps to set up the project locally:
 
 #### Prerequisites
-- **Node.js** (>= 14.x)
-- **npm** (>= 6.x) or **yarn** (>= 1.x)
+- **Node.js** (>= 18.x)
+- **npm**
 - **Git**
 
 #### Clone the Repository
