@@ -71,8 +71,6 @@ const FileNode: React.FC<NodeProps> = ({
         dynamicTyping: true,
 
         complete: (results) => {
-          console.log(results);
-
           dispatch(
             setNodeData({
               nodeId: id,
@@ -109,10 +107,10 @@ const FileNode: React.FC<NodeProps> = ({
       </div>
       <div className="flex items-center justify-center gap-2 p-4">
         {file ? (
-          <div className="text-xs">File name: &quot;{file?.name}&quot;</div>
+          <div className="text-xs">File name: &quot;{file}&quot;</div>
         ) : (
           <>
-            <div className="text-xs">Drop file here or:</div>
+            <div className="text-xs">Select file:</div>
             <Dialog>
               <DialogTrigger>
                 <label
@@ -136,7 +134,10 @@ const FileNode: React.FC<NodeProps> = ({
                       <div
                         key={index}
                         role="button"
-                        onClick={() => handleFileChange(elem.path)}
+                        onClick={() => {
+                          setFile(elem.name);
+                          handleFileChange(elem.path);
+                        }}
                         className="flex flex-col items-center justify-start gap-2 p-4 text-center hover:bg-white/10"
                       >
                         <File
