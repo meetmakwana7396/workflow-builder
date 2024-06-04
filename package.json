@@ -18,7 +18,7 @@
     "i": "^0.3.7",
     "lodash": "^4.17.21",
     "lucide-react": "^0.379.0",
-    "next": "latest",
+    "next": "13.4",
     "npm": "^10.8.1",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
