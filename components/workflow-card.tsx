@@ -36,7 +36,7 @@ const WorkflowCard = ({ workflow }: { workflow: Workflow }) => {
             className="p-0 px-2.5 py-2  hover:bg-red-500/20"
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(deleteWorkflow(workflow.id));
+              dispatch(deleteWorkflow(workflow?.id));
               router.refresh();
             }}
           >

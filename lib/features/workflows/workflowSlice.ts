@@ -67,11 +67,13 @@ export const workflowSlice = createSlice({
     },
 
     deleteWorkflow: (state, { payload }) => {
-      state.workflows = state.workflows.filter(
+      state.workflows = state?.workflows?.filter(
         (workflow) => workflow.id !== payload,
       );
       let localData = JSON.parse(localStorage.getItem("workflows") as string);
-      if (localData.length > 0) {
+      console.log(localData, "localData");
+
+      if (localData && localData?.length > 0) {
         localData = localData.filter((data: Workflow) => data.id !== payload);
         localStorage.setItem("workflows", JSON.stringify(localData));
       }
