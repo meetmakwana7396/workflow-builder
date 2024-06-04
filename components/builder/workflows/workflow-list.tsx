@@ -25,7 +25,6 @@ const WorkflowList = () => {
         dispatch(setWorkflows(localStorageWorkflows));
     }
     setIsLoading(false);
-    router.refresh();
   }, [workflows, dispatch, router]);
   console.log(isLoading, "isLoading");
 
