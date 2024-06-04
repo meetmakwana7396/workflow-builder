@@ -127,13 +127,15 @@ const FilterNode: React.FC<NodeProps> = ({
         case "text is exactly":
           results = csvJson?.filter(
             (row: any) =>
-              row[selectedColumn.columnName] === (userInput as string),
+              row[selectedColumn.columnName]?.toLowerCase() ===
+              (userInput as string)?.toLowerCase(),
           );
           break;
         case "text is not exactly":
           results = csvJson?.filter(
             (row: any) =>
-              row[selectedColumn.columnName] !== (userInput as string),
+              row[selectedColumn.columnName]?.toLowerCase() !==
+              (userInput as string)?.toLowerCase(),
           );
           break;
         case "text includes":

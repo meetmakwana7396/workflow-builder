@@ -119,7 +119,7 @@ export const workflowSlice = createSlice({
       workflows[currentWorkflowIndex].nodes = workflows[
         currentWorkflowIndex
       ].nodes.filter((node) => node.id !== payload);
-      nodeData = nodeData.filter((d: any) => console.log(d, "Node Data"));
+      nodeData = nodeData.filter((d: NodeData) => d.nodeId === payload);
     },
 
     onNodesChange: ({ workflows, currentWorkflowIndex }, { payload }) => {
@@ -159,6 +159,7 @@ export const workflowSlice = createSlice({
     },
 
     setResultData: (state, { payload }) => {
+      console.count("resultdata reducer");
       state.resultColumns = payload.columns;
       state.resultData = payload.results;
       state.open = true;

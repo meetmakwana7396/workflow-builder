@@ -20,7 +20,6 @@ import {
 import { useRouter } from "next/navigation";
 import AddNodeButton from "./nodes/add-node-button";
 import FilterNode from "./nodes/transform-nodes/filter-node";
-import CollapsibleDataSection from "./collapsible-data-section";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import SortNode from "./nodes/transform-nodes/sort-node";
@@ -141,7 +140,6 @@ const BuilderMain = () => {
           />
         </ReactFlow>
       </ReactFlowProvider>
-      <CollapsibleDataSection />
     </div>
   );
 };

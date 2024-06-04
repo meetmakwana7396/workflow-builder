@@ -10,6 +10,7 @@ import {
 } from "@/lib/hooks";
 import {
   deleteNode,
+  NodeData,
   setNodeData,
   setResultData,
 } from "@/lib/features/workflows/workflowSlice";
@@ -22,27 +23,22 @@ const MapNode: React.FC<NodeProps> = ({
   selected,
 }) => {
   const dispatch = useAppDispatch();
-  const nodeData: Array<any> = useAppSelector(memoizedSourceNodeData);
+  const nodeData: NodeData[] = useAppSelector(memoizedSourceNodeData);
 
-  const columns: string[] = nodeData?.find(
-    (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
+  const columns: string[] | undefined = nodeData?.find(
+    (d) => d.nodeId === data.sourceId,
   )?.data?.columns;
 
   const getCsvJson = () => {
-    const csvJson = nodeData.findLast(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.findLast((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
 
     return csvJson;
   };
 
-  console.log(getCsvJson());
-  
-
   const handleRun = () => {
-    const csvJson = nodeData.findLast(
-      (d: { nodeId: string; data: any }) => d.nodeId === data.sourceId,
-    )?.data?.csvJson;
+    const csvJson = nodeData.findLast((d) => d.nodeId === data.sourceId)?.data
+      ?.csvJson;
 
     dispatch(
       setResultData({
@@ -76,9 +72,7 @@ const MapNode: React.FC<NodeProps> = ({
 
       <div className="min-w-56 space-y-2 p-2 pr-4">
         <div className="flex h-10 items-center text-xs">
-          {getCsvJson()?.length > 0
-            ? getCsvJson()?.length
-            : `<-- Select database`}
+          This node will map data.
         </div>
       </div>
 

@@ -7,10 +7,12 @@ import { Input } from "@/components/ui/input";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import WorkflowCard from "@/components/workflow-card";
+import { useRouter } from "next/navigation";
 
 const WorkflowList = () => {
   const { workflows } = useAppSelector((state) => state.workflows);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -23,7 +25,9 @@ const WorkflowList = () => {
         dispatch(setWorkflows(localStorageWorkflows));
     }
     setIsLoading(false);
-  }, [workflows, dispatch]);
+    router.refresh();
+  }, [workflows, dispatch, router]);
+  console.log(isLoading, "isLoading");
 
   return (
     <div>
