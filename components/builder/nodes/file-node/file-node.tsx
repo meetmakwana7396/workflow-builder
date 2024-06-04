@@ -50,11 +50,13 @@ const FileNode: React.FC<NodeProps> = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
+
     if (file) {
       setFile(file);
       Papa.parse(file, {
         dynamicTyping: true,
         header: true,
+        // preview: 1,
         complete: function (results) {
           dispatch(
             setNodeData({

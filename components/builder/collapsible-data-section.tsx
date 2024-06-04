@@ -12,6 +12,28 @@ import { cn } from "@/lib/utils";
 import { CaretUp, SmileySad } from "@phosphor-icons/react";
 import { Button } from "../ui/button";
 import Papa from "papaparse";
+import { FixedSizeList as List } from "react-window";
+
+export const Row = ({
+  index,
+  style,
+  data,
+}: {
+  index: any;
+  style: any;
+  data: any;
+}) => {
+  const item = data[index];
+  return (
+    <tr className="hover:bg-neutral-800" style={style}>
+      {Object.keys(item).map((i, index) => (
+        <td className="py-1 text-xs text-neutral-400" key={index}>
+          {item[i]}
+        </td>
+      ))}
+    </tr>
+  );
+};
 
 export default function CollapsibleDataSection() {
   const dispatch = useAppDispatch();
@@ -69,35 +91,25 @@ export default function CollapsibleDataSection() {
             Total records:{" "}
             <span className="text-blue-500">{resultData.length}</span>
           </div>
-          <div className="relative h-[100%] overflow-y-auto scroll-smooth pb-10 shadow-md">
-            <table className="divide-y divide-neutral-600">
-              <thead className="sticky top-0 bg-black">
-                <tr>
-                  {resultColumns?.map((col) => (
-                    <th
-                      key={col}
-                      className="px-6 py-1 text-left text-xs font-medium uppercase tracking-wider"
-                    >
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-600">
-                {resultData.map((row: any, index: number) => (
-                  <tr key={index} className="hover:bg-neutral-800">
-                    {Object.keys(row).map((i, index) => (
-                      <td
-                        className="whitespace-nowrap px-6 py-1 text-xs text-neutral-400"
-                        key={index}
-                      >
-                        {row[i]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="relative grid h-[100%] auto-cols-max grid-flow-col pb-10">
+            <div>
+              {/* Display loading/error messages as before */}
+              <table style={{ width: "100%" }}>
+                {/* Add your table headers here */}
+                <tbody>
+                  <List
+                    height={400} // Adjust height as needed
+                    width="100%"
+                    itemCount={resultData?.length}
+                    itemSize={25}
+                    overscanCount={5}
+                    itemData={resultData}
+                  >
+                    {Row}
+                  </List>
+                </tbody>
+              </table>
+            </div>
           </div>
         </>
       ) : (
