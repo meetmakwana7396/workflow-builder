@@ -25,13 +25,16 @@ export const Row = ({
 }) => {
   const item = data[index];
   return (
-    <tr className="hover:bg-neutral-800" style={style}>
+    <div className="flex w-full" style={style}>
       {Object.keys(item).map((i, index) => (
-        <td className="py-1 text-xs text-neutral-400" key={index}>
+        <div
+          className="flex min-w-[200px] flex-wrap py-1 text-xs text-neutral-400"
+          key={index}
+        >
           {item[i]}
-        </td>
+        </div>
       ))}
-    </tr>
+    </div>
   );
 };
 
@@ -39,7 +42,6 @@ export default function CollapsibleDataSection() {
   const dispatch = useAppDispatch();
   const { open, resultData, resultColumns } =
     useAppSelector(memoizedResultData);
-  console.count("resultData");
 
   function downloadFile(content: string, fileName: string, mimeType: string) {
     const a = document.createElement("a");
@@ -91,24 +93,18 @@ export default function CollapsibleDataSection() {
             Total records:{" "}
             <span className="text-blue-500">{resultData.length}</span>
           </div>
-          <div className="relative grid h-[100%] auto-cols-max grid-flow-col pb-10">
-            <div>
-              {/* Display loading/error messages as before */}
-              <table style={{ width: "100%" }}>
-                {/* Add your table headers here */}
-                <tbody>
-                  <List
-                    height={400} // Adjust height as needed
-                    width="100%"
-                    itemCount={resultData?.length}
-                    itemSize={25}
-                    overscanCount={5}
-                    itemData={resultData}
-                  >
-                    {Row}
-                  </List>
-                </tbody>
-              </table>
+          <div className="relative">
+            <div style={{ width: "100%" }}>
+              <List
+                height={300} // Adjust height as needed
+                width={1400}
+                itemCount={resultData?.length}
+                itemSize={30}
+                overscanCount={20}
+                itemData={resultData}
+              >
+                {Row}
+              </List>
             </div>
           </div>
         </>
